@@ -340,6 +340,8 @@ Range1D_t genie::utils::kinematics::InelQ2Lim_W(
   double W2  = TMath::Power(W,  2.);
   double s   = M2 + 2*M*Ev;
 
+
+
   SLOG("KineLimits", pDEBUG) << "s  = " << s;
   SLOG("KineLimits", pDEBUG) << "Ev = " << Ev;
   assert (s>0);

@@ -174,12 +174,13 @@ int SRCNuclearRecoil::SRCRecoilPDG( const GHepParticle & nucleon, const Target &
       
       if (TMath::Sqrt(pN2) > kF) {
         if (fNuclModel->RecoilPDG() != 0) eject_nucleon_pdg = fNuclModel->RecoilPDG();
-        else{
+      /*  else{
           double Pp = (nucleon.Pdg() == kPdgProton) ? fPPPairPercentage : fPNPairPercentage;
           RandomGen * rnd = RandomGen::Instance();
           double prob = rnd->RndGen().Rndm();
           eject_nucleon_pdg = (prob > Pp) ? kPdgNeutron : kPdgProton;
         }
+        */
       }
 
       

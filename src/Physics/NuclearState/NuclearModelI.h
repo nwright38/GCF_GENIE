@@ -130,8 +130,8 @@ protected:
   NuclearModelI()
     : Algorithm()
     , fCurrRemovalEnergy(0)
-    , fRecoilPDG(0)
     , fFermiMomentum(0)
+    , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
     , fFermiMoverInteractionType(kFermiMoveDefault)
@@ -141,8 +141,8 @@ protected:
   NuclearModelI(std::string name)
     : Algorithm(name)
     , fCurrRemovalEnergy(0)
-    , fRecoilPDG(0)
     , fFermiMomentum(0)
+    , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
     , fFermiMoverInteractionType(kFermiMoveDefault)
@@ -152,8 +152,8 @@ protected:
   NuclearModelI(std::string name, std::string config)
     : Algorithm(name, config)
     , fCurrRemovalEnergy(0)
-    , fRecoilPDG(0)
     , fFermiMomentum(0)
+    , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
     , fFermiMoverInteractionType(kFermiMoveDefault)
@@ -163,8 +163,8 @@ protected:
 
   virtual void LoadConfig() ;
 
-  const string & FermiMomentumTableName() const { return fKFTableName; }
-  const genie::FermiMomentumTable & FermiMomentumTable() const { return *fKFTable ; }
+ // const string & FermiMomentumTableName() const { return fKFTableName; }
+ // const genie::FermiMomentumTable & FermiMomentumTable() const { return *fKFTable ; }
 
   mutable double   fCurrRemovalEnergy;
   mutable double   fFermiMomentum;

@@ -112,7 +112,7 @@ namespace kinematics
    Range1D_t  InelYLim_X  (double El, double ml, double M, double x);
 
 //   static const double kMinQ2Limit   = .02;  // GeV^2 // Q2 threshold relevant for em scattering events
-   static const double kMinQ2Limit   = 1.;  // GeV^2 // Q2 threshold relevant for em scattering events
+   static const double kMinQ2Limit   = 1.3;  // GeV^2 // Q2 threshold relevant for em scattering events
   }
 
 } // kinematics namespace

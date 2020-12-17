@@ -65,6 +65,8 @@ bool NuclearModelMap::GenerateNucleon(const Target & target,
 
   bool ok = nm->GenerateNucleon(target,hitNucleonRadius);
 
+  fRecoilPDG = nm->RecoilPDG();
+  fFermiMomentum = nm->FermiMomentum();
   fCurrRemovalEnergy = nm->RemovalEnergy();
   const TVector3& p  = nm->Momentum3();
   fCurrMomentum.SetXYZ(p.Px(), p.Py(), p.Pz());
@@ -77,6 +79,7 @@ double NuclearModelMap::Prob(double p, double w, const Target & target,
                              double hitNucRadius) const
 {
   const NuclearModelI * nm = this->SelectModel(target);
+  
   if(!nm) return 0;
 
   return nm->Prob(p,w,target,hitNucRadius);

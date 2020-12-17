@@ -189,8 +189,10 @@ double KPhaseSpace::Threshold(void) const
 
     //Mtgt = tgt.HitNucP4().M();
 
+
     // Threshold probe total energy in the lab frame
     double Ethr = 0.5 * ( smin - mv*mv - Mtgt*Mtgt ) / Mtgt;
+
 
     return std::max( 0., Ethr );
   }
@@ -598,10 +600,33 @@ Range1D_t KPhaseSpace::Q2Lim(void) const
     }
     if (pi.IsInverseBetaDecay()) {
       Q2l = kinematics::InelQ2Lim_W(Ev,M,ml,W,controls::kMinQ2Limit_VLE);
-    } else {
-    // Ev = init_state.ProbeE(kRfLab);
+    } 
+    if(is_em) Q2l = kinematics::electromagnetic::InelQ2Lim_W(Ev,ml,M,W);
+    else {
 
-     Q2l = is_em ? kinematics::electromagnetic::InelQ2Lim_W(Ev,ml,M,W) : kinematics::InelQ2Lim_W(Ev,M,ml,W);
+
+      const TLorentzVector & pnuc4 = init_state.Tgt().HitNucP4(); //[@LAB
+      TLorentzVector * p4v = init_state.GetProbeP4(kRfLab); // v 4p @ Nucleon rest frame
+      TVector3 beta = (*p4v + pnuc4).BoostVector();
+
+      double s = (pnuc4 + *p4v).M2();
+
+      p4v->Boost(-beta);
+
+      Ev  = p4v->E();
+      double pvMag = p4v->Vect().Mag();
+
+      double mv = p4v->M();
+      double mv2 = mv*mv;
+      double ml2 = ml*ml;
+      double W2 = W*W;
+
+      double El  = (s + ml2 - W2)/(2*sqrt(s));
+
+      double plMag = sqrt(El*El + ml2);
+
+      Q2l.min =  - mv2 - ml2 + 2*Ev*El - 2*plMag*pvMag;
+      Q2l.max =  - mv2 - ml2 + 2*Ev*El + 2*plMag*pvMag;
     }
 
     return Q2l;

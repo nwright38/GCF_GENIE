@@ -38,6 +38,7 @@ using namespace genie;
 using namespace genie::constants;
 using namespace genie::utils;
 
+
 //____________________________________________________________________________
 LocalFGM::LocalFGM() :
 NuclearModelI("genie::LocalFGM")
@@ -121,7 +122,9 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 
   fCurrMomentum.SetXYZ(px,py,pz);
   fFermiMomentum = KF;
+  fRecoilPDG = recoil_pdg;
 
+  std::cout << "Local FGM Recoil PDG: " << fRecoilPDG << std::endl;
 
   //-- set removal energy
   //
@@ -233,6 +236,26 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
 //  double iC = (C>0) ? 1./C : 0.; // unused variables
 //  double kfa_pi_2 = TMath::Power(KF*a/kPi,2); // unused variables
 
+  bool hit_nuc_p = pdg::IsProton(target.HitNucPdg());
+  std::cout << "LFG PN PDG: " << target.HitNucPdg() << std::endl;
+
+  double contact_sum = fC12_Cpn0 + fC12_Cpn1 + fC12_Cpp0;
+  double pair_prob = rnd->RndGen().Rndm() * contact_sum;
+    
+  if(pair_prob < fC12_Cpn0 + fC12_Cpn1) {
+    if(hit_nuc_p) recoil_pdg = kPdgNeutron;
+    if(!hit_nuc_p) recoil_pdg = kPdgProton;
+  }
+  else {
+    if(hit_nuc_p) recoil_pdg = kPdgProton;
+    if(!hit_nuc_p) recoil_pdg = kPdgNeutron;
+  }
+
+
+  vector<double> AV18_univ_function;
+  if(pair_prob < fC12_Cpn1) AV18_univ_function = fAV18_pn1;
+  else if(pair_prob < fC12_Cpn1 + fC12_Cpn0) AV18_univ_function = fAV18_pn0;
+  else AV18_univ_function = fAV18_pp0;
 
  // KF = .25;
   for(int i = 0; i < npbins; i++) {
@@ -240,13 +263,13 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
      double p2 = TMath::Power(p,2);
 
 
-     
-
-
      // use expression with fSRC_Fraction to allow the possibility of 
      // using the Correlated Fermi Gas Model with a high momentum tail
 
      // calculate |phi(p)|^2
+
+     
+
      double phi2 = -1;
         if (p <= KF){
 
@@ -261,26 +284,19 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
             if (bin < 0.)
               phi2 = 0.;
             if (bin < 1.)
-              phi2 = bin * fContacts_pn1[0];
+              phi2 = bin * AV18_univ_function[0];
             if (bin > 100.)
               phi2 = 0.;
                 
             int b = bin;
             double x = bin - b;
             if(phi2 == -1){
-              phi2 = x*fContacts_pn1[b] + (1.-x)*fContacts_pn1[b-1];
+              phi2 = x*AV18_univ_function[b] + (1.-x)*AV18_univ_function[b-1];
             }   
             
             phi2 *= (1./(4*kPi));
 
-                // TVector3 P1 = RLMotion;
-            // TVector3 P2 = .5*fCOMCurrMomentum - RLMotion;
-          //  p = P1.Mag();
-          /*  if(p < .25){
-              //phi2 = (1./(4*kPi)) * ( fSRC_Fraction / (1./KF - 1./fPCutOff) ) / TMath::Power(p,4.);
-              phi2 = 0;
-            }
-          */
+        
             p2 = p*p; 
 
 
@@ -339,9 +355,15 @@ void LocalFGM::LoadConfig(void)
   assert(fPMax > 0);
 
   this->GetParamDef("SRC-Fraction", fSRC_Fraction, 0.0);
-  this->GetParamVect("Contacts-pn1", fContacts_pn1);
-  this->GetParamVect("Contacts-pn0", fContacts_pn0);
-  this->GetParamVect("Contacts-pp0", fContacts_pp0);
+
+  this->GetParamVect("AV18_pn1", fAV18_pn1);
+  this->GetParamVect("AV18_pn0", fAV18_pn0);
+  this->GetParamVect("AV18_pp0", fAV18_pp0);
+
+  this->GetParam("C12_Cpn1", fC12_Cpn1);
+  this->GetParam("C12_Cpn0", fC12_Cpn0);
+  this->GetParam("C12_Cpp0", fC12_Cpp0);
+
   this->GetParam("LFG-MomentumCutOff", fPCutOff);
 
 

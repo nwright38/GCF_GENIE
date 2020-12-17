@@ -65,15 +65,24 @@ public:
   void Configure (const Registry & config);
   void Configure (string param_set) ;
 
+  mutable int recoil_pdg;
+
  protected:
   void   LoadConfig (void);
 
 
 private:
   TH1D * ProbDistro (const Target & t, double r) const;
-  vector<double> fContacts_pn1;
-  vector<double> fContacts_pn0;
-  vector<double> fContacts_pp0;
+  vector<double> fAV18_pn1;
+  vector<double> fAV18_pn0;
+  vector<double> fAV18_pp0;
+
+
+  double fC12_Cpn1;
+  double fC12_Cpn0;
+  double fC12_Cpp0;
+
+
   map<int, double> fNucRmvE;
 
   double fPMax;

@@ -91,8 +91,8 @@ void FermiMover::ProcessEventRecord(GHepRecord * evrec) const
   this->KickHitNucleon(evrec);
 
   // handle the addition of the recoil nucleon
-  if ( fSecondEmitter )fSecondEmitter -> ProcessEventRecord( evrec ) ;
-  
+  if ( fSecondEmitter ) fSecondEmitter -> ProcessEventRecord( evrec ) ;
+
   // add a recoiled nucleus remnant
   this->AddTargetNucleusRemnant(evrec);
 }
@@ -180,13 +180,10 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
       double Mi  = nucleus  -> Mass(); // initial nucleus mass
 
       if(fGeneralizedContactFormalismOffShell && fNuclModel->FermiMomentum() < fNuclModel->Momentum3().Mag()){
+        std::cout << "FM KF: " << fNuclModel->FermiMomentum() << std::endl;
 
-        double Pp = (nucleon->Pdg() == kPdgProton) ? fPPPairPercentage : fPNPairPercentage;
-        RandomGen * rnd = RandomGen::Instance();
-        double prob = rnd->RndGen().Rndm();
-        int eject_nucleon_pdg = (prob > Pp) ? kPdgNeutron : kPdgProton;
+        int eject_nucleon_pdg = fNuclModel->RecoilPDG();
 
-        fNuclModel->SetRecoilPDG(eject_nucleon_pdg);
         bool is_hit_p  = pdg::IsProton(nucleon_pdgc);
         bool is_rec_p  = pdg::IsProton(eject_nucleon_pdg);
 
@@ -203,12 +200,13 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
         double recoil_py = fNuclModel->COMMomentum3().Y() - fNuclModel->Momentum3().Y();
         double recoil_pz = fNuclModel->COMMomentum3().Z() - fNuclModel->Momentum3().Z();
       
+        std::cout << "FM Recoil PDG: " << eject_nucleon_pdg << std::endl;
 
+    
         double recoil_M  = PDGLibrary::Instance()->Find(eject_nucleon_pdg)->Mass();
         double recoil_E  = TMath::Sqrt((recoil_px*recoil_px + recoil_py*recoil_py + recoil_pz*recoil_pz)+recoil_M*recoil_M); 
 
         EN = Mi - sqrt(TMath::Power(fNuclModel->COMMomentum(),2) + TMath::Power(Mf,2)) - recoil_E; 
-
 
 
       } else{ EN = Mi - TMath::Sqrt(pF2 + Mf*Mf); }
@@ -229,6 +227,12 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
   p4->SetE ( EN      );
   p4->SetXYZT(p3.Px(),p3.Py(),p3.Pz(),EN);
 
+
+  std::cout << "FM px:" << fNuclModel->Momentum3().X() << std::endl;
+  std::cout << "FM py:" << fNuclModel->Momentum3().Y() << std::endl;
+  std::cout << "FM pz:" << fNuclModel->Momentum3().Z() << std::endl;
+  std::cout << "FM EN:" << EN << std::endl;
+  std::cout << "FM M:" << p4->M() << std::endl;
 
   nucleon->SetMomentum(*p4); // update GHEP value
 

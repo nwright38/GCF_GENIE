@@ -421,6 +421,7 @@ double InitialState::ProbeE(RefFrame_t ref_frame) const
       // Mandelstam s
       double s = sumP4.Dot( sumP4 ); // dot product with itself
 
+
       // Probe energy in the hit nucleon rest frame
       double Ev = ( s - mv2 - M*M ) / ( 2. * M );
 
