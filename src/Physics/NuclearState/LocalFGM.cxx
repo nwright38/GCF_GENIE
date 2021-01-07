@@ -102,7 +102,6 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 			    1.0/3.0) *hbarc;
 
 
-
   if(p < KF){
         px = p*sintheta*cosfi;
         py = p*sintheta*sinfi;
@@ -172,7 +171,6 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
 
   // Calculate Fermi Momentum using Local FG equations
   double KF = LocalFermiMomentum( target, nucleon_pdgc, r ) ; 
-
 
   double hbarc = kLightSpeed*kPlankConstant/genie::units::fermi;
   
@@ -252,12 +250,13 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
   }
 
 
+
+
   vector<double> AV18_univ_function;
   if(pair_prob < fC12_Cpn1) AV18_univ_function = fAV18_pn1;
   else if(pair_prob < fC12_Cpn1 + fC12_Cpn0) AV18_univ_function = fAV18_pn0;
   else AV18_univ_function = fAV18_pp0;
 
- // KF = .25;
   for(int i = 0; i < npbins; i++) {
      double p  = i * dp;
      double p2 = TMath::Power(p,2);

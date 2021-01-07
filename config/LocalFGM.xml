@@ -22,6 +22,14 @@ NucRemovalE@Pdg=?      int      Yes       nuclear removal energy for specfic nuc
     <!-- CutOff known from electron scattering experiments
      Short range correlations and the isospin dependence of nuclear correlation functions (arXiv:1710.07966)-->
     <param type="double" name = "LFG-MomentumCutOff">   1. </param>
+
+// <param type="double" name = "SRC-Fraction">    0.2   </param>
+
+    <param type="double" name = "C12_Cpn1">    15.876   </param>
+    <param type="double" name = "C12_Cpn0">    1.244   </param>
+    <param type="double" name = "C12_Cpp0">    1.140   </param>
+
+
 <param type="vec-double" name="AV18_pn1" delim=";">  
       9719347.01980097;
       318593.292678900;
