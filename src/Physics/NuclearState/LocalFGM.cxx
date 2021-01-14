@@ -272,7 +272,8 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
      double phi2 = -1;
         if (p <= KF){
 
-            phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
+  
+          phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
 
 
         }else if( p > KF && p < fPCutOff ){            
@@ -293,7 +294,7 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
               phi2 = x*AV18_univ_function[b] + (1.-x)*AV18_univ_function[b-1];
             }   
             
-            phi2 *= (1./(4*kPi));
+            phi2 *= (1./(4*kPi))*(1/TMath::Power((2*kPi*hbarc),3));
 
         
             p2 = p*p; 
