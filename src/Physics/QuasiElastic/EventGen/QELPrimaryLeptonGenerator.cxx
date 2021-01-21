@@ -69,8 +69,8 @@ void QELPrimaryLeptonGenerator::ProcessEventRecord(GHepRecord * evrec) const
     // no modification is required to the std implementation
     return(PrimaryLeptonGenerator::ProcessEventRecord(evrec));
   }
-  
-*/
+ */ 
+
 
   TLorentzVector * p4v = init_state.GetProbeP4(kRfLab); // v 4p @ Nucleon rest frame
   TVector3 beta = (*p4v + pnuc4).BoostVector();
