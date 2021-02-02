@@ -124,7 +124,6 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   fFermiMomentum = KF;
   fRecoilPDG = recoil_pdg;
 
-  std::cout << "Local FGM Recoil PDG: " << fRecoilPDG << std::endl;
 
   //-- set removal energy
   //
@@ -237,7 +236,6 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
 //  double kfa_pi_2 = TMath::Power(KF*a/kPi,2); // unused variables
 
   bool hit_nuc_p = pdg::IsProton(target.HitNucPdg());
-  std::cout << "LFG PN PDG: " << target.HitNucPdg() << std::endl;
 
   double contact_sum = fC12_Cpn0 + fC12_Cpn1 + 2*fC12_Cpp0;
   double pair_prob = rnd->RndGen().Rndm() * contact_sum;
