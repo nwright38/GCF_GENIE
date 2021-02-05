@@ -292,7 +292,7 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
               phi2 = x*AV18_univ_function[b] + (1.-x)*AV18_univ_function[b-1];
             }   
             
-            phi2 *= (1./(4*kPi));
+            phi2 *= (1./TMath::Power(2*TMath::Pi(),3));
 
         
             p2 = p*p; 
