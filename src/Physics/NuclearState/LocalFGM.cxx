@@ -68,25 +68,8 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 
   //-- set fermi momentum vector
   //
-  TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
-  if(!prob) {
-    LOG("LocalFGM", pNOTICE)
-              << "Null nucleon momentum probability distribution";
-    exit(1);
-  }
-  double p = prob->GetRandom();
-  delete prob;
-  LOG("LocalFGM", pINFO) << "|p,nucleon| = " << p;
-
-  RandomGen * rnd = RandomGen::Instance();
-
-  double costheta = -1. + 2. * rnd->RndGen().Rndm();
-  double sintheta = TMath::Sqrt(1.-costheta*costheta);
-  double fi       = 2 * kPi * rnd->RndGen().Rndm();
-  double cosfi    = TMath::Cos(fi);
-  double sinfi    = TMath::Sin(fi);
-
-  double px, py, pz;  
+  TVector3 pn(0,0,0);
+  double px, py, pz;
 
   int nucleon_pdgc = target.HitNucPdg();
   assert(pdg::IsProton(nucleon_pdgc) || pdg::IsNeutron(nucleon_pdgc));
@@ -99,26 +82,46 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   // Calculate Fermi Momentum using Local FG equations
   double hbarc = kLightSpeed*kPlankConstant/genie::units::fermi;
   double KF= TMath::Power(3*kPi2*numNuc*genie::utils::nuclear::Density(hitNucleonRadius,A),
-			    1.0/3.0) *hbarc;
+          1.0/3.0) *hbarc;
+
+  while(pn.Mag() < KF){
+    TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
+    if(!prob) {
+      LOG("LocalFGM", pNOTICE)
+                << "Null nucleon momentum probability distribution";
+      exit(1);
+    }
+    double p = prob->GetRandom();
+    delete prob;
+    LOG("LocalFGM", pINFO) << "|p,nucleon| = " << p;
+
+    RandomGen * rnd = RandomGen::Instance();
+
+    double costheta = -1. + 2. * rnd->RndGen().Rndm();
+    double sintheta = TMath::Sqrt(1.-costheta*costheta);
+    double fi       = 2 * kPi * rnd->RndGen().Rndm();
+    double cosfi    = TMath::Cos(fi);
+    double sinfi    = TMath::Sin(fi);
+
+
+    if(p < KF){
+          px = p*sintheta*cosfi;
+          py = p*sintheta*sinfi;
+          pz = p*costheta;
+    } else {
+          
+
+          px = p*sintheta*cosfi + .5*fCOMCurrMomentum.X();
+          py = p*sintheta*sinfi + .5*fCOMCurrMomentum.Y();
+          pz = p*costheta + .5*fCOMCurrMomentum.Z();
 
 
 
-  if(p < KF){
-        px = p*sintheta*cosfi;
-        py = p*sintheta*sinfi;
-        pz = p*costheta;
-  } else {
-        
+    }
 
-        px = p*sintheta*cosfi + .5*fCOMCurrMomentum.X();
-        py = p*sintheta*sinfi + .5*fCOMCurrMomentum.Y();
-        pz = p*costheta + .5*fCOMCurrMomentum.Z();
-
-
+    pn.SetXYZ(px,py,pz);
 
   }
-
-
 
   fCurrMomentum.SetXYZ(px,py,pz);
   fFermiMomentum = KF;
@@ -260,7 +263,6 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
      double p  = i * dp;
      double p2 = TMath::Power(p,2);
 
-
      // use expression with fSRC_Fraction to allow the possibility of 
      // using the Correlated Fermi Gas Model with a high momentum tail
 
@@ -271,8 +273,8 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
      double phi2 = -1;
         if (p <= KF){
 
-            phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
-
+//            phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
+		phi2 = 0.;	
 
         }else if( p > KF && p < fPCutOff ){            
 
