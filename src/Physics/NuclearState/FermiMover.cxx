@@ -179,8 +179,9 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
       double Mf  = fnucleus -> Mass(); // remnant nucleus mass
       double Mi  = nucleus  -> Mass(); // initial nucleus mass
 
-      if(fGeneralizedContactFormalismOffShell && fNuclModel->FermiMomentum() < fNuclModel->Momentum3().Mag()){
-        std::cout << "FM KF: " << fNuclModel->FermiMomentum() << std::endl;
+      if(fGeneralizedContactFormalismOffShell && fNuclModel->FermiMomentum() < fNuclModel->RelativeMomentum()){
+
+        std::cout << "Relative Momentum: " << fNuclModel->RelativeMomentum() << std::endl;
 
         int eject_nucleon_pdg = fNuclModel->RecoilPDG();
 
@@ -200,7 +201,6 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
         double recoil_py = fNuclModel->COMMomentum3().Y() - fNuclModel->Momentum3().Y();
         double recoil_pz = fNuclModel->COMMomentum3().Z() - fNuclModel->Momentum3().Z();
       
-        std::cout << "FM Recoil PDG: " << eject_nucleon_pdg << std::endl;
 
     
         double recoil_M  = PDGLibrary::Instance()->Find(eject_nucleon_pdg)->Mass();
@@ -228,11 +228,6 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
   p4->SetXYZT(p3.Px(),p3.Py(),p3.Pz(),EN);
 
 
-  std::cout << "FM px:" << fNuclModel->Momentum3().X() << std::endl;
-  std::cout << "FM py:" << fNuclModel->Momentum3().Y() << std::endl;
-  std::cout << "FM pz:" << fNuclModel->Momentum3().Z() << std::endl;
-  std::cout << "FM EN:" << EN << std::endl;
-  std::cout << "FM M:" << p4->M() << std::endl;
 
   nucleon->SetMomentum(*p4); // update GHEP value
 

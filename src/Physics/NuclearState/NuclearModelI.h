@@ -72,6 +72,11 @@ public:
     return fFermiMomentum;
   }
 
+  inline double         RelativeMomentum   (void)           const
+  {
+    return fRelativeMomentum;
+  }
+
   inline int         RecoilPDG   (void)           const
   {
     return fRecoilPDG;
@@ -116,6 +121,11 @@ public:
     fCurrRemovalEnergy = E;
   }
 
+  inline void SetRelativeMomentum(double p) const
+  {
+    fRelativeMomentum = p;
+  }
+
   inline void SetFermiMomentum(double p) const
   {
     fFermiMomentum = p;
@@ -131,6 +141,7 @@ protected:
     : Algorithm()
     , fCurrRemovalEnergy(0)
     , fFermiMomentum(0)
+    , fRelativeMomentum(0)
     , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
@@ -142,6 +153,7 @@ protected:
     : Algorithm(name)
     , fCurrRemovalEnergy(0)
     , fFermiMomentum(0)
+    , fRelativeMomentum(0)
     , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
@@ -153,6 +165,7 @@ protected:
     : Algorithm(name, config)
     , fCurrRemovalEnergy(0)
     , fFermiMomentum(0)
+    , fRelativeMomentum(0)
     , fRecoilPDG(0)
     , fCurrMomentum(0,0,0)
     , fCOMCurrMomentum(-1,-1,-1)
@@ -167,6 +180,7 @@ protected:
  // const genie::FermiMomentumTable & FermiMomentumTable() const { return *fKFTable ; }
 
   mutable double   fCurrRemovalEnergy;
+  mutable double   fRelativeMomentum;
   mutable double   fFermiMomentum;
   mutable int fRecoilPDG;
   mutable TVector3 fCurrMomentum;

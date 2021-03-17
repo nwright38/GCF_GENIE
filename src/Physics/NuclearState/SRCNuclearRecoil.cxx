@@ -164,7 +164,7 @@ int SRCNuclearRecoil::SRCRecoilPDG( const GHepParticle & nucleon, const Target &
       // const int nucleus_pdgc = tgt->Pdg();
       const int nucleon_pdgc = nucleon.Pdg();
 
-      double pN2 = TMath::Power(nucleon.P4()->Rho(),2.); // (momentum of struck nucleon)^2
+      //double pN2 = TMath::Power(nucleon.P4()->Rho(),2.); // (momentum of struck nucleon)^2
 
       double kF = fNuclModel -> LocalFermiMomentum( tgt, 
 						    nucleon_pdgc, 
@@ -172,7 +172,7 @@ int SRCNuclearRecoil::SRCRecoilPDG( const GHepParticle & nucleon, const Target &
 
 
       
-      if (TMath::Sqrt(pN2) > kF) {
+      if (fNuclModel->RelativeMomentum() > kF) {
         if (fNuclModel->RecoilPDG() != 0) eject_nucleon_pdg = fNuclModel->RecoilPDG();
       /*  else{
           double Pp = (nucleon.Pdg() == kPdgProton) ? fPPPairPercentage : fPNPairPercentage;

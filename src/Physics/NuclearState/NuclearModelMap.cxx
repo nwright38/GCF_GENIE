@@ -72,6 +72,8 @@ bool NuclearModelMap::GenerateNucleon(const Target & target,
   fCurrMomentum.SetXYZ(p.Px(), p.Py(), p.Pz());
   fFermiMoverInteractionType = nm->GetFermiMoverInteractionType();
   fCOMCurrMomentum = nm->COMMomentum3();
+  fRelativeMomentum = nm->RelativeMomentum();
+
   return ok;
 }
 //____________________________________________________________________________

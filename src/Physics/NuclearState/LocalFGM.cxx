@@ -68,7 +68,6 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 
   //-- set fermi momentum vector
   //
-  TVector3 pn(0,0,0);
   double px, py, pz;
 
   int nucleon_pdgc = target.HitNucPdg();
@@ -84,16 +83,23 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   double KF= TMath::Power(3*kPi2*numNuc*genie::utils::nuclear::Density(hitNucleonRadius,A),
           1.0/3.0) *hbarc;
 
-  while(pn.Mag() < KF){
+  fRelativeMomentum = -1;
+
+  double p = 0;
+  while(fRelativeMomentum < .25){
     TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
     if(!prob) {
       LOG("LocalFGM", pNOTICE)
                 << "Null nucleon momentum probability distribution";
       exit(1);
     }
-    double p = prob->GetRandom();
+    p = prob->GetRandom();
     delete prob;
     LOG("LocalFGM", pINFO) << "|p,nucleon| = " << p;
+
+    fRelativeMomentum = p;
+  
+  }
 
     RandomGen * rnd = RandomGen::Instance();
 
@@ -119,9 +125,8 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 
     }
 
-    pn.SetXYZ(px,py,pz);
-
-  }
+  
+  
 
   fCurrMomentum.SetXYZ(px,py,pz);
   fFermiMomentum = KF;
