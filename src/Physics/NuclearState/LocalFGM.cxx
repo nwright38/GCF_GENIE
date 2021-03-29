@@ -86,7 +86,7 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   fRelativeMomentum = -1;
 
   double p = 0;
-  while(fRelativeMomentum < .25){
+  //while(fRelativeMomentum < .25 || fRelativeMomentum < KF){
     TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
     if(!prob) {
       LOG("LocalFGM", pNOTICE)
@@ -99,7 +99,7 @@ bool LocalFGM::GenerateNucleon(const Target & target,
 
     fRelativeMomentum = p;
   
-  }
+  //}
 
     RandomGen * rnd = RandomGen::Instance();
 
@@ -278,8 +278,9 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
      double phi2 = -1;
         if (p <= KF){
 
-//            phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
-		phi2 = 0.;	
+          phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
+		   // phi2 = 0.;
+       // continue;	
 
         }else if( p > KF && p < fPCutOff ){            
 

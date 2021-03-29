@@ -179,7 +179,7 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
       double Mf  = fnucleus -> Mass(); // remnant nucleus mass
       double Mi  = nucleus  -> Mass(); // initial nucleus mass
 
-      if(fGeneralizedContactFormalismOffShell && fNuclModel->FermiMomentum() < fNuclModel->RelativeMomentum()){
+      if(fGeneralizedContactFormalismOffShell && fNuclModel->FermiMomentum() < fNuclModel->Momentum()){
 
         std::cout << "Relative Momentum: " << fNuclModel->RelativeMomentum() << std::endl;
 

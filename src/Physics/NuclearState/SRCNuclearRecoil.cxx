@@ -172,7 +172,7 @@ int SRCNuclearRecoil::SRCRecoilPDG( const GHepParticle & nucleon, const Target &
 
 
       
-      if (fNuclModel->RelativeMomentum() > kF) {
+      if (fNuclModel->Momentum() > kF) {
         if (fNuclModel->RecoilPDG() != 0) eject_nucleon_pdg = fNuclModel->RecoilPDG();
       /*  else{
           double Pp = (nucleon.Pdg() == kPdgProton) ? fPPPairPercentage : fPNPairPercentage;
