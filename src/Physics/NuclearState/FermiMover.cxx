@@ -92,6 +92,7 @@ void FermiMover::ProcessEventRecord(GHepRecord * evrec) const
 
   // handle the addition of the recoil nucleon
   if ( fSecondEmitter ) fSecondEmitter -> ProcessEventRecord( evrec ) ;
+  else return;
 
   // add a recoiled nucleus remnant
   this->AddTargetNucleusRemnant(evrec);
@@ -144,6 +145,7 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
   double EN=0;
   FermiMoverInteractionType_t interaction_type = fNuclModel->GetFermiMoverInteractionType();
 
+  bool SRCPair = false;
   // EffectiveSF treatment
   if (interaction_type == kFermiMoveEffectiveSF1p1h) {
     EN = nucleon->Mass() - w - pF2 / (2 * (nucleus->Mass() - nucleon->Mass()));
@@ -184,6 +186,7 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
         std::cout << "Relative Momentum: " << fNuclModel->RelativeMomentum() << std::endl;
 
         int eject_nucleon_pdg = fNuclModel->RecoilPDG();
+ 	SRCPair = true;
 
         bool is_hit_p  = pdg::IsProton(nucleon_pdgc);
         bool is_rec_p  = pdg::IsProton(eject_nucleon_pdg);
@@ -236,7 +239,7 @@ void FermiMover::KickHitNucleon(GHepRecord * evrec) const
   // selected interaction). In this case mark the event as unphysical and
   // abort the current thread.
   const KPhaseSpace & kps = interaction->PhaseSpace();
-  if(!kps.IsAboveThreshold()) {
+  if(!kps.IsAboveThreshold() || !SRCPair) {
      LOG("FermiMover", pNOTICE)
                   << "Event below threshold after generating Fermi momentum";
 

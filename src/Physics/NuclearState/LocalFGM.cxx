@@ -86,7 +86,13 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   fRelativeMomentum = -1;
 
   double p = 0;
+
+  bool SRCEvent = false;
+  bool hit_nuc_assigned = false;
+  if(target.HitNucP4Ptr()->Vect().Mag() != 0) hit_nuc_assigned = true;
+
   //while(fRelativeMomentum < .25 || fRelativeMomentum < KF){
+  while(!SRCEvent){
     TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
     if(!prob) {
       LOG("LocalFGM", pNOTICE)
@@ -116,17 +122,17 @@ bool LocalFGM::GenerateNucleon(const Target & target,
           pz = p*costheta;
     } else {
           
-
           px = p*sintheta*cosfi + .5*fCOMCurrMomentum.X();
           py = p*sintheta*sinfi + .5*fCOMCurrMomentum.Y();
           pz = p*costheta + .5*fCOMCurrMomentum.Z();
-
-
-
     }
 
+    if(hit_nuc_assigned) SRCEvent = true;
+
+    TVector3 currMomentum(px,py,pz);
+    if(currMomentum.Mag() > KF && fRelativeMomentum > .25) SRCEvent = true;
   
-  
+  }
 
   fCurrMomentum.SetXYZ(px,py,pz);
   fFermiMomentum = KF;
@@ -245,6 +251,9 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
 
   bool hit_nuc_p = pdg::IsProton(target.HitNucPdg());
 
+  bool hit_nuc_assigned = false;
+  if(target.HitNucP4Ptr()->Px()> 0 || target.HitNucP4Ptr()->Py()> 0 || target.HitNucP4Ptr()->Pz()> 0) hit_nuc_assigned = true;
+
   double contact_sum = fC12_Cpn0 + fC12_Cpn1 + 2*fC12_Cpp0;
   double pair_prob = rnd->RndGen().Rndm() * contact_sum;
     
@@ -264,6 +273,10 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
   else AV18_univ_function = fAV18_pp0;
 
  // KF = .25;
+
+  int mfWeight = 0;
+  if(!hit_nuc_assigned) mfWeight = 1;
+
   for(int i = 0; i < npbins; i++) {
      double p  = i * dp;
      double p2 = TMath::Power(p,2);
@@ -281,6 +294,8 @@ TH1D * LocalFGM::ProbDistro(const Target & target, double r) const
           phi2 = (1./(4*kPi)) * (3/TMath::Power(KF,3.)) * ( 1 - fSRC_Fraction );
 		   // phi2 = 0.;
        // continue;	
+
+	phi2*=mfWeight;
 
         }else if( p > KF && p < fPCutOff ){            
 
