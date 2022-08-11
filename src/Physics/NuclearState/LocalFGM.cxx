@@ -101,7 +101,6 @@ bool LocalFGM::GenerateNucleon(const Target & target,
       exit(1);
     }
     p = prob->GetRandom();
-    delete prob;
     LOG("LocalFGM", pINFO) << "|p,nucleon| = " << p;
 
     fRelativeMomentum = p;
@@ -134,6 +133,7 @@ bool LocalFGM::GenerateNucleon(const Target & target,
     if(currMomentum.Mag() > KF && fRelativeMomentum > .25) SRCEvent = true;
   
   }
+    delete prob;
 
   fCurrMomentum.SetXYZ(px,py,pz);
   fFermiMomentum = KF;
