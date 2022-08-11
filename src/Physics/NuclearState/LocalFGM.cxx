@@ -91,9 +91,10 @@ bool LocalFGM::GenerateNucleon(const Target & target,
   bool hit_nuc_assigned = false;
   if(target.HitNucP4Ptr()->Vect().Mag() != 0) hit_nuc_assigned = true;
 
+    TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
+
   //while(fRelativeMomentum < .25 || fRelativeMomentum < KF){
   while(!SRCEvent){
-    TH1D * prob = this->ProbDistro(target,hitNucleonRadius);
     if(!prob) {
       LOG("LocalFGM", pNOTICE)
                 << "Null nucleon momentum probability distribution";
